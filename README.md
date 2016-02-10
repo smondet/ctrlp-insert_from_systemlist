@@ -12,5 +12,5 @@ fun! GetDates()
     call ctrlp#init(id)
 endfun
 nmap <leader>pid :call GetDates()<cr>
-nmap <leader>pig :call call ctrlp#init(ctrlp#insert_from_systemlist#run_with_command('gdate -R ; gdate -I ; date '))<cr>
+nmap <leader>pig :call ctrlp#init(ctrlp#insert_from_systemlist#run_with_command('git ls-files'))<cr>
 ```
