@@ -16,8 +16,8 @@ let g:loaded_ctrlp_insert_from_systemlist = 1
 call add(g:ctrlp_ext_vars, {
 	\ 'init': 'ctrlp#insert_from_systemlist#init()',
 	\ 'accept': 'ctrlp#insert_from_systemlist#accept',
-	\ 'lname': 'long statusline name',
-	\ 'sname': 'shortname',
+	\ 'lname': 'Insert Command Result',
+	\ 'sname': 'inssyslist',
 	\ 'type': 'line',
 	\ 'enter': 'ctrlp#insert_from_systemlist#enter()',
 	\ 'exit': 'ctrlp#insert_from_systemlist#exit()',
@@ -26,14 +26,20 @@ call add(g:ctrlp_ext_vars, {
 	\ 'specinput': 0,
 	\ })
 
-let g:ctrlp_insert_form_systemlist = 'ls -1'
+let s:ctrlp_insert_from_systemlist_command = 'ls -1'
+function! ctrlp#insert_from_systemlist#command()
+  return s:ctrlp_insert_from_systemlist_command
+endfun
+function! ctrlp#insert_from_systemlist#set_command(val)
+  let s:ctrlp_insert_from_systemlist_command = a:val
+endfun
 
 " Provide a list of strings to search in
 "
 " Return: a Vim's List
 "
 function! ctrlp#insert_from_systemlist#init()
-	let input = systemlist(g:ctrlp_insert_form_systemlist)
+	let input = systemlist(ctrlp#insert_from_systemlist#command())
 	return input
 endfunction
 
@@ -53,6 +59,7 @@ endfunction
 
 " (optional) Do something before enterting ctrlp
 function! ctrlp#insert_from_systemlist#enter()
+  echomsg 'CtrlP Insert: ' . s:ctrlp_insert_from_systemlist_command
 endfunction
 
 " (optional) Do something after exiting ctrlp
@@ -71,6 +78,10 @@ function! ctrlp#insert_from_systemlist#id()
 	return s:id
 endfunction
 
+function! ctrlp#insert_from_systemlist#run_with_command(cmd)
+  call ctrlp#insert_from_systemlist#set_command(a:cmd)
+	return ctrlp#insert_from_systemlist#id()
+endfunction
 " Create a command to directly call the new search type
 "
 " Put this in vimrc or plugin/insert_from_systemlist.vim
